@@ -1,0 +1,47 @@
+{
+  "name": "shackwork",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0 --port 3000",
+    "dev:share": "node scripts/dev-with-tunnel.mjs",
+    "share:tunnel": "npx --yes cloudflared tunnel --url http://127.0.0.1:3000",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "eslint",
+    "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "npx tsx prisma/seed.ts",
+    "poster:capture": "node scripts/capture-playwright.mjs",
+    "poster:pdf": "node scripts/export-poster-pdf.mjs",
+    "open:pdf": "node scripts/open-poster-pdf.mjs",
+    "poster:open": "start \"\" poster\\shackwork-bitirme-poster.html",
+    "poster:sunum": "start \"\" poster\\shackwork-sunum-calisma-poster.html",
+    "poster:sunum:pdf": "node scripts/export-poster-pdf.mjs poster/shackwork-sunum-calisma-poster.html"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "jose": "^6.2.2",
+    "next": "16.2.3",
+    "nodemailer": "^8.0.6",
+    "pdf-lib": "^1.17.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "recharts": "^3.8.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.3",
+    "playwright": "^1.60.0",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^4",
+    "tsx": "^4.20.5",
+    "typescript": "^5"
+  }
+}
