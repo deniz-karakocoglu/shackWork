@@ -25,16 +25,22 @@ export async function POST(request: Request) {
     const token = await createResetToken(user.id);
     const baseUrl = process.env.APP_BASE_URL ?? "http://localhost:3000";
     const resetUrl = `${baseUrl}/sifre-sifirla?token=${encodeURIComponent(token)}`;
+    const appResetUrl = `shackwork://reset?token=${encodeURIComponent(token)}`;
 
     const sent = await sendMail({
       to: user.email,
       subject: "shackWork sifre sifirlama",
-      text: `Merhaba,\n\nSifreni yenilemek icin bu linki ac:\n${resetUrl}\n\nBu link 1 saat gecerlidir.`,
-      html: `<p>Merhaba,</p><p>Sifreni yenilemek icin <a href="${resetUrl}">buraya tikla</a>.</p><p>Bu link 1 saat gecerlidir.</p>`,
+      text: `Merhaba,\n\nSifreni yenilemek icin bu linki ac:\n${resetUrl}\n\nMobil uygulama: ${appResetUrl}\n\nBu link 1 saat gecerlidir.`,
+      html: `<p>Merhaba,</p><p>Sifreni yenilemek icin <a href="${resetUrl}">buraya tikla</a>.</p><p>Mobil uygulama: <a href="${appResetUrl}">${appResetUrl}</a></p><p>Bu link 1 saat gecerlidir.</p>`,
     });
 
     if (!sent) {
-      console.log("[shackWork] SMTP yok veya mail gonderilemedi. Reset link:", resetUrl);
+      console.log(
+        "[shackWork] SMTP yok veya mail gonderilemedi. Reset link:",
+        resetUrl,
+        "App:",
+        appResetUrl,
+      );
     }
 
     return NextResponse.json({
