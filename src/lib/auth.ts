@@ -1,8 +1,8 @@
-// kimlik doğrulama: bcrypt + JWT + httpOnly çerez
+// kimlik doğrulama: bcrypt + JWT + httpOnly çerez (+ mobil Bearer)
 
 import bcrypt from "bcryptjs";
 import { SignJWT, jwtVerify } from "jose";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 const COOKIE_NAME = "shackwork_session";
 
@@ -10,6 +10,15 @@ function getSecret() {
   return new TextEncoder().encode(
     process.env.JWT_SECRET ?? "shackwork-dev-secret-change-me",
   );
+}
+
+async function userIdFromToken(token: string): Promise<string | null> {
+  try {
+    const { payload } = await jwtVerify(token, getSecret());
+    return typeof payload.sub === "string" ? payload.sub : null;
+  } catch {
+    return null;
+  }
 }
 
 // bcrypt, 10 round salt
@@ -30,16 +39,22 @@ export async function createSessionToken(userId: string) {
     .sign(getSecret());
 }
 
+// web: httpOnly çerez | mobil: Authorization: Bearer
 export async function readSessionUserId() {
   const jar = await cookies();
-  const token = jar.get(COOKIE_NAME)?.value;
-  if (!token) return null;
-  try {
-    const { payload } = await jwtVerify(token, getSecret());
-    return typeof payload.sub === "string" ? payload.sub : null;
-  } catch {
-    return null;
+  const cookieToken = jar.get(COOKIE_NAME)?.value;
+  if (cookieToken) {
+    const id = await userIdFromToken(cookieToken);
+    if (id) return id;
   }
+
+  const hdrs = await headers();
+  const auth = hdrs.get("authorization");
+  if (auth?.startsWith("Bearer ")) {
+    return userIdFromToken(auth.slice(7).trim());
+  }
+
+  return null;
 }
 
 // httpOnly → XSS koruması, secure → üretimde HTTPS

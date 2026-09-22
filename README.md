@@ -24,12 +24,24 @@ Kişisel antrenman, beslenme ve gelişim takibi için **full-stack web uygulamas
 | Grafik | Recharts |
 | PDF | pdf-lib |
 
+## Mobil uygulama
+
+Expo (React Native) istemci: `mobile/` klasörü.
+
+```bash
+cd mobile && npm install && cp .env.example .env
+npm start
+```
+
+Detay: [mobile/README.md](mobile/README.md) · mimari: [MOBIL-WEB-MIMARI.md](MOBIL-WEB-MIMARI.md)
+
 ## Proje yapısı
 
 ```
 src/app/          → sayfalar + API route'lar
 src/lib/          → auth, AI plan, PDF, şifre politikası
 prisma/           → schema, migration, seed
+mobile/           → Expo mobil uygulama (iOS/Android)
 public/           → statik dosyalar, koç fotoğrafları
 ```
 
