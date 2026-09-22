@@ -16,7 +16,7 @@ export default function AuthLayout() {
         contentStyle: { backgroundColor: c.background },
       }}
     >
-      <Stack.Screen name="login" options={{ title: "Giriş" }} />
+      <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="register" options={{ title: "Kayıt" }} />
       <Stack.Screen name="forgot" options={{ title: "Şifremi unuttum" }} />
       <Stack.Screen name="reset" options={{ title: "Şifre sıfırla" }} />
